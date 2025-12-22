@@ -1,12 +1,11 @@
-# Crustum - CakePHP Plugins
 
-We build powerful, production-ready plugins for modern CakePHP applications.
+We build powerful, production-ready tools, plugins, and applications for modern web development.
 
 ## About
 
 Crustum is a collection of high-quality CakePHP plugins designed to extend the framework's capabilities and simplify complex development tasks. Our plugins integrate seamlessly with CakePHP's architecture, following framework conventions and best practices.
 
-The name "Crustum" comes from Latin, meaning "cake" or "pastry"—a fitting tribute to the CakePHP framework we build for.
+The name "Crustum" comes from Latin, meaning "cake" or "pastry" — a fitting tribute to the CakePHP framework we build for.
 
 ## Key Plugins
 
