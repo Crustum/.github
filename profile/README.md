@@ -1,32 +1,42 @@
-
-We build powerful, production-ready tools, plugins, and applications for modern web development.
+We build production-ready CakePHP plugins — and we release a lot of them.
 
 ## About
 
-Crustum is a collection of high-quality CakePHP plugins designed to extend the framework's capabilities and simplify complex development tasks. Our plugins integrate seamlessly with CakePHP's architecture, following framework conventions and best practices.
+**Crustum** is a growing family of CakePHP plugins that extend the framework for real application work: queues, notifications, broadcasting, OAuth, search, scheduling, AI tooling, and more. Each package follows CakePHP conventions so it drops into your app without fighting the framework.
 
-The name "Crustum" comes from Latin, meaning "cake" or "pastry" — a fitting tribute to the CakePHP framework we build for.
+The name comes from Latin *crustum* — “cake” or “pastry” — a nod to CakePHP. That same Latin thread runs through many plugin names: short, memorable labels for focused tools.
 
-## Key Plugins
+## Plugins
 
-- **PluginManifest** - Standardized plugin asset installation and publishing system
-- **BatchQueue** - Advanced job coordination for CakePHP Queue
-- **Broadcasting** - Real-time broadcasting system with WebSocket support
-- **Notification** - Comprehensive notification system with multiple delivery channels
-- **Temporal** - Workflow orchestration for distributed, durable workflows
-- **OpenRouter** - Unified interface for Large Language Models with type-safe DTOs
+The catalog keeps expanding:
 
-## Team Goals
+- **PluginManifest** — Publish and install plugin assets the same way every time
+- **BatchQueue** — Batch, chain, and coordinate jobs on CakePHP Queue
+- **Queue** — Dispatchable job helpers on top of cakephp/queue
+- **Scheduling** — Fluent task scheduling with cron-style APIs
+- **BlazeCast** — Self-hosted WebSocket server (Pusher protocol)
+- **Broadcasting** — Real-time event broadcasting with multiple drivers
+- **MercureBroadcasting** — Mercure SSE broadcaster driver for Broadcasting
+- **Temporal** — Durable, distributed workflow orchestration
+- **Speculum** (*speculum* — mirror) — Debug insight into requests, queries, jobs, mail, and more
+- **Ignis** (*ignis* — fire) — AI guidelines, agent skills, and CakePHP development tooling
+- **Mcp** — Model Context Protocol servers and tools for CakePHP (modern acronym, not Latin)
+- **Essentia** (*essentia* — essence) — Agent-optimized compact output for PHPUnit, PHPStan, and related tools
+- **Explorator** (*explorator* — explorer) — Driver-based full-text search for Tables and Entities (database, Algolia, Meilisearch, Typesense)
+- **Inspector** (*inspector* — examiner) — Package and stack detection for CakePHP projects
+- **Tessera** (*tessera* — token / mosaic tile) — OAuth2 server for CakePHP
+- **Saloon** — Saloon v4 HTTP client integration for CakePHP 5
+- **OpenRouter** — Typed LLM access via OpenRouter
+- **JsonSchema** — Fluent JSON Schema builder for PHP
+- **Prompts** — Interactive CLI prompts for CakePHP Console
+- **Notification** (+ channel packages) — Multi-channel delivery
 
-**Our Mission:** We are committed to building reliable, well-documented plugins that solve real-world problems. We maintain high code quality and follow CakePHP best practices, ensuring our plugins integrate seamlessly with the framework. Our focus is on providing an excellent developer experience through clear APIs and comprehensive documentation, while actively supporting the CakePHP community with open-source contributions.
+Browse everything under [github.com/crustum](https://github.com/crustum) and the [docs](https://crustum.github.io/docs/).
 
-**What We're Working On:** We're expanding the plugin ecosystem for CakePHP 5.x, continuously improving developer tooling and automation to make plugin development more efficient.
+## Mission
 
-## Get Started
-
-Visit our [documentation](https://crustum.github.io/docs/) to explore our plugins and get started with your CakePHP projects.
+Ship reliable, well-documented plugins that solve problems developers actually hit. Stay close to CakePHP 5.x practices, keep APIs clear, and keep contributing to the open-source CakePHP ecosystem.
 
 ---
 
 **Built with ❤️ for the CakePHP community**
-
