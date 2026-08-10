@@ -10,26 +10,26 @@ The name comes from Latin *crustum* — “cake” or “pastry” — a nod to 
 
 The catalog keeps expanding:
 
-- **PluginManifest** — Publish and install plugin assets the same way every time
-- **BatchQueue** — Batch, chain, and coordinate jobs on CakePHP Queue
-- **Queue** — Dispatchable job helpers on top of cakephp/queue
-- **Scheduling** — Fluent task scheduling with cron-style APIs
-- **BlazeCast** — Self-hosted WebSocket server (Pusher protocol)
-- **Broadcasting** — Real-time event broadcasting with multiple drivers
-- **MercureBroadcasting** — Mercure SSE broadcaster driver for Broadcasting
-- **Temporal** — Durable, distributed workflow orchestration
-- **Speculum** (*speculum* — mirror) — Debug insight into requests, queries, jobs, mail, and more
-- **Ignis** (*ignis* — fire) — AI guidelines, agent skills, and CakePHP development tooling
-- **Mcp** — Model Context Protocol servers and tools for CakePHP (modern acronym, not Latin)
-- **Essentia** (*essentia* — essence) — Agent-optimized compact output for PHPUnit, PHPStan, and related tools
-- **Explorator** (*explorator* — explorer) — Driver-based full-text search for Tables and Entities (database, Algolia, Meilisearch, Typesense)
-- **Inspector** (*inspector* — examiner) — Package and stack detection for CakePHP projects
-- **Tessera** (*tessera* — token / mosaic tile) — OAuth2 server for CakePHP
-- **Saloon** — Saloon v4 HTTP client integration for CakePHP 5
-- **OpenRouter** — Typed LLM access via OpenRouter
-- **JsonSchema** — Fluent JSON Schema builder for PHP
-- **Prompts** — Interactive CLI prompts for CakePHP Console
-- **Notification** (+ channel packages) — Multi-channel delivery
+- [**PluginManifest**](https://github.com/skie/plugin-manifest) — Publish and install plugin assets the same way every time
+- [**BatchQueue**](https://github.com/crustum/batch-queue) — Batch, chain, and coordinate jobs on CakePHP Queue
+- [**Queue**](https://github.com/Crustum/cakephp-queue) — Dispatchable job helpers on top of cakephp/queue
+- [**Scheduling**](https://github.com/Crustum/cakephp-scheduling) — Fluent task scheduling with cron-style APIs
+- [**Broadcasting**](https://github.com/Crustum/Broadcasting) — Real-time event broadcasting with multiple drivers
+- [**BlazeCast**](https://github.com/crustum/blazecast) — Self-hosted WebSocket server (Pusher protocol)
+- [**MercureBroadcasting**](https://github.com/crustum/mercure-broadcasting) — Mercure SSE broadcaster driver for Broadcasting
+- [**Temporal**](https://github.com/Crustum/cakephp-temporal) — Durable, distributed workflow orchestration
+- [**Speculum**](https://github.com/Crustum/speculum) (*speculum* — mirror) — Debug insight into requests, queries, jobs, mail, and more
+- [**Ignis**](https://github.com/Crustum/ignis) (*ignis* — fire) — AI guidelines, agent skills, and CakePHP development tooling
+- [**Mcp**](https://github.com/Crustum/mcp) — Model Context Protocol servers and tools for CakePHP (modern acronym, not Latin)
+- [**Essentia**](https://github.com/crustum/essentia) (*essentia* — essence) — Agent-optimized compact output for PHPUnit, PHPStan, and related tools
+- [**Explorator**](https://github.com/Crustum/explorator) (*explorator* — explorer) — Driver-based full-text search for Tables and Entities (database, Algolia, Meilisearch, Typesense)
+- [**Inspector**](https://github.com/Crustum/inspector) (*inspector* — examiner) — Package and stack detection for CakePHP projects
+- [**Tessera**](https://github.com/Crustum/tessera) (*tessera* — token / mosaic tile) — OAuth2 server for CakePHP
+- [**Saloon**](https://github.com/Crustum/saloon) — Saloon v4 HTTP client integration for CakePHP 5
+- [**OpenRouter**](https://github.com/crustum/openrouter) — Typed LLM access via OpenRouter
+- [**JsonSchema**](https://github.com/Crustum/json-schema) — Fluent JSON Schema builder for PHP
+- [**Prompts**](https://github.com/Crustum/prompts) — Interactive CLI prompts for CakePHP Console
+- [**Notification**](https://github.com/Crustum/Notification) (+ channel packages) — Multi-channel delivery
 
 Browse everything under [github.com/crustum](https://github.com/crustum) and the [docs](https://crustum.github.io/docs/).
 
