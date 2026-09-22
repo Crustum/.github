@@ -1,5 +1,3 @@
-We build production-ready CakePHP plugins — and we release a lot of them.
-
 ## About
 
 **Crustum** is a growing family of CakePHP plugins that extend the framework for real application work: queues, notifications, broadcasting, OAuth, search, scheduling, AI tooling, and more. Each package follows CakePHP conventions so it drops into your app without fighting the framework.
