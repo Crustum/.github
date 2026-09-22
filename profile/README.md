@@ -30,8 +30,6 @@ The catalog keeps expanding. All plugins are documented under [crustum.github.io
 - [**Prompts**](https://github.com/Crustum/prompts) — Interactive CLI prompts for CakePHP Console
 - [**PluginManifest**](https://github.com/crustum/PluginManifest) — Publish and install plugin assets the same way every time
 
-Browse everything under [github.com/crustum](https://github.com/crustum) and the [docs](https://crustum.github.io/docs/).
-
 ### Monitoring, Debugging & Performance
 
 - [**Audit**](https://github.com/Crustum/Audit) — Diagnoses configuration, environment, and infrastructure problems before they reach users
@@ -70,6 +68,8 @@ Browse everything under [github.com/crustum](https://github.com/crustum) and the
 - [**Meta**](https://github.com/Crustum/Meta) — Fluent document-head management (title, meta, Open Graph, canonical, robots, structured data)
 - [**Saloon**](https://github.com/Crustum/saloon) — Saloon v4 HTTP client integration for CakePHP 5
 - [**Tessera**](https://github.com/Crustum/tessera) (*tessera* — token / mosaic tile) — OAuth2 server for CakePHP
+
+Browse everything under [github.com/crustum](https://github.com/crustum) and the [docs](https://crustum.github.io/docs/).
 
 ## Mission
 
