@@ -15,7 +15,7 @@ The catalog keeps expanding. All plugins are documented under [crustum.github.io
 - [**Ai**](https://github.com/Crustum/cakephp-ai) — Unified API for AI providers (OpenAI, Anthropic, Gemini, Azure, Bedrock, Groq, xAI, DeepSeek, Mistral, Ollama, OpenRouter) with agents, tools, sub-agents, structured output, images, audio, embeddings, streaming and queued runs
 - [**Essentia**](https://github.com/crustum/essentia) (*essentia* — essence) — Agent-optimized compact output for PHPUnit, PHPStan, and related tools
 - [**Ignis**](https://github.com/Crustum/ignis) (*ignis* — fire) — AI guidelines, agent skills, and CakePHP development tooling
-- [**Mcp**](https://github.com/Crustum/mcp) — Model Context Protocol servers and tools for CakePHP (modern acronym, not Latin)
+- [**Mcp**](https://github.com/Crustum/mcp) — Model Context Protocol servers and tools for CakePHP
 - [**OpenRouter**](https://github.com/crustum/openrouter) — Typed LLM access via OpenRouter
 
 ### Monitoring, Debugging & Performance
