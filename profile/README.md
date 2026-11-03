@@ -11,10 +11,14 @@ The catalog keeps expanding. All plugins are documented under [crustum.github.io
 ### AI, Agents & LLM
 
 - [**Ai**](https://github.com/Crustum/cakephp-ai) — Unified API for AI providers (OpenAI, Anthropic, Gemini, Azure, Bedrock, Groq, xAI, DeepSeek, Mistral, Ollama, OpenRouter) with agents, tools, sub-agents, structured output, images, audio, embeddings, streaming and queued runs
+- [**AiInteraction**](https://github.com/Crustum/ai-interaction) — UI-agnostic interaction contracts for AI agents (slash commands, turns, sessions, history, preferences)
+- [**AiNexus**](https://github.com/Crustum/ai-nexus) — Browser dev dashboard for agents (playground with streaming, tool inspection, history)
+- [**AiTui**](https://github.com/Crustum/ai-tui) — Terminal chat screen for agents (streaming answers, slash commands, history)
 - [**Essentia**](https://github.com/crustum/essentia) (*essentia* — essence) — Agent-optimized compact output for PHPUnit, PHPStan, and related tools
 - [**Ignis**](https://github.com/Crustum/ignis) (*ignis* — fire) — AI guidelines, agent skills, and CakePHP development tooling
 - [**Mcp**](https://github.com/Crustum/mcp) — Model Context Protocol servers and tools for CakePHP
-- [**OpenRouter**](https://github.com/crustum/openrouter) — Typed LLM access via OpenRouter
+- [**OpenRouter**](https://github.com/Crustum/cakephp-open-router) — Typed LLM access via OpenRouter
+- [**Panifex**](https://github.com/Crustum/panifex) — Autonomous coding-agent backend (reads codebase, edits files, runs tests, reviews PRs)
 
 ### Data, Search & Validation
 
@@ -22,15 +26,18 @@ The catalog keeps expanding. All plugins are documented under [crustum.github.io
 
 ### Developer Experience & Core
 
+- [**AttributeResolver**](https://github.com/Crustum/cakephp-attribute-resolver) — PHP attribute discovery and resolution with caching and DI integration for CakePHP 5.x
 - [**DevConsole**](https://github.com/Crustum/cakephp-dev-console) — Single-terminal local dev runner (server + Vite, queue workers, log TUI)
 - [**Inspector**](https://github.com/Crustum/inspector) (*inspector* — examiner) — Package and stack detection for CakePHP projects
 - [**JsonSchema**](https://github.com/Crustum/json-schema) — Fluent JSON Schema builder for PHP
 - [**Prompts**](https://github.com/Crustum/prompts) — Interactive CLI prompts for CakePHP Console
 - [**PluginManifest**](https://github.com/crustum/PluginManifest) — Publish and install plugin assets the same way every time
+- [**StructarmedCakephp**](https://github.com/Crustum/structarmed-cakephp) — StructArmed preset for CakePHP conventions (layer isolation, naming, safety rules)
 
 ### Monitoring, Debugging & Performance
 
 - [**Audit**](https://github.com/Crustum/Audit) — Diagnoses configuration, environment, and infrastructure problems before they reach users
+- [**DebugBar**](https://github.com/Crustum/debug-bar) — Debugging toolbar and inspector (requests, SQL, timeline, cache, logs, MCP tools)
 - [**Rhythm**](https://github.com/Crustum/rhythm) — Real-time application performance monitoring (requests, queries, queues, cache, exceptions) with live dashboard
 - [**Speculum**](https://github.com/Crustum/speculum) (*speculum* — mirror) — Debug insight into requests, queries, jobs, mail, and more
 - [**Stimulus**](https://github.com/Crustum/stimulus) — Serve CakePHP on FrankenPHP, RoadRunner, Swoole / Open Swoole with long-lived workers
