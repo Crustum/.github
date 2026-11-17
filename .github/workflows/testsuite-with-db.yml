@@ -113,7 +113,7 @@ jobs:
         options: --health-cmd="pg_isready -U postgres" --health-interval=10s --health-timeout=5s --health-retries=5
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
@@ -147,7 +147,7 @@ jobs:
           coverage: pcov
 
       - name: Composer install
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@v4
         with:
           dependency-versions: ${{ matrix.dependencies }}
           composer-options: ${{ inputs.composer-options }}
@@ -179,7 +179,7 @@ jobs:
 
       - name: Code Coverage Report
         if: ${{ success() && inputs.with-coverage && matrix.php-version == inputs.coverage-php && matrix.db-type == inputs.coverage-db && matrix.dependencies == 'highest' }}
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
@@ -206,7 +206,7 @@ jobs:
         options: --health-cmd="pg_isready -U postgres" --health-interval=10s --health-timeout=5s --health-retries=5
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
 
@@ -240,7 +240,7 @@ jobs:
           coverage: none
 
       - name: Composer install (lowest)
-        uses: ramsey/composer-install@v3
+        uses: ramsey/composer-install@v4
         with:
           dependency-versions: lowest
           composer-options: ${{ inputs.composer-options }}
