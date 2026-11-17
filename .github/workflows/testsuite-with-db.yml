@@ -1,0 +1,266 @@
+name: Testsuite with DB
+
+on:
+  workflow_call:
+    inputs:
+      php-versions:
+        description: 'JSON array of PHP versions'
+        required: false
+        default: '["8.2", "8.3", "8.4", "8.5"]'
+        type: string
+      db-types:
+        description: 'JSON array subset of ["mysql", "pgsql", "sqlite"]'
+        required: false
+        default: '["mysql", "sqlite"]'
+        type: string
+      dependencies:
+        description: 'JSON array of dependency versions for the main matrix'
+        required: false
+        default: '["highest"]'
+        type: string
+      with-lowest:
+        description: 'Add one prefer-lowest leg (first PHP + first DB + first OS)'
+        required: false
+        default: true
+        type: boolean
+      os:
+        description: 'JSON array of runners'
+        required: false
+        default: '["ubuntu-24.04"]'
+        type: string
+      db-name:
+        description: 'MySQL database name for tests'
+        required: false
+        default: 'cakephp'
+        type: string
+      with-redis:
+        description: 'Start redis:7 and export REDIS_HOST/PORT'
+        required: false
+        default: false
+        type: boolean
+      with-meilisearch:
+        description: 'Start meilisearch:latest (Explorator tier)'
+        required: false
+        default: false
+        type: boolean
+      with-typesense:
+        description: 'Start Typesense 30.1 (Explorator tier)'
+        required: false
+        default: false
+        type: boolean
+      extensions-extra:
+        description: 'Extra PHP extensions, comma separated'
+        required: false
+        default: ''
+        type: string
+      test-cmd:
+        description: 'Test command (phpunit or pest, without coverage flags)'
+        required: false
+        default: 'vendor/bin/phpunit --configuration=phpunit.xml.dist'
+        type: string
+      coverage-php:
+        description: 'PHP version of the coverage leg'
+        required: false
+        default: '8.2'
+        type: string
+      coverage-db:
+        description: 'DB type of the coverage leg'
+        required: false
+        default: 'mysql'
+        type: string
+      with-coverage:
+        description: 'Upload coverage to codecov'
+        required: false
+        default: true
+        type: boolean
+      composer-options:
+        description: 'Extra composer options for unstable PHP'
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  testsuite:
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.unstable }}
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ${{ fromJSON(inputs.php-versions) }}
+        db-type: ${{ fromJSON(inputs.db-types) }}
+        dependencies: ${{ fromJSON(inputs.dependencies) }}
+        os: ${{ fromJSON(inputs.os) }}
+        unstable: [false]
+
+    services:
+      mysql:
+        image: mysql:8.4
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: ${{ inputs.db-name }}
+        options: --health-cmd="mysqladmin ping -h localhost" --health-interval=10s --health-timeout=5s --health-retries=5
+      postgres:
+        image: postgres:15
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: --health-cmd="pg_isready -U postgres" --health-interval=10s --health-timeout=5s --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup MySQL database
+        if: matrix.db-type == 'mysql'
+        run: |
+          sudo service mysql start || true
+          mysql -h 127.0.0.1 -u root -proot -e "CREATE DATABASE IF NOT EXISTS \`${{ inputs.db-name }}\`;"
+
+      - name: Start redis
+        if: inputs.with-redis
+        run: docker run -d --name redis -p 6379:6379 redis:7
+
+      - name: Start meilisearch
+        if: inputs.with-meilisearch
+        run: docker run -d --name meilisearch -p 7700:7700 getmeili/meilisearch:latest
+
+      - name: Start typesense
+        if: inputs.with-typesense
+        run: |
+          docker run -d --name typesense -p 8108:8108 \
+            -e TYPESENSE_API_KEY=xyz -e TYPESENSE_DATA_DIR=/data \
+            typesense/typesense:30.1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl, pdo_${{ matrix.db-type }}${{ inputs.with-redis && ', redis' || '' }}${{ inputs.extensions-extra != '' && ', ' || '' }}${{ inputs.extensions-extra }}
+          ini-values: zend.assertions=1
+          coverage: pcov
+
+      - name: Composer install
+        uses: ramsey/composer-install@v3
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
+          composer-options: ${{ inputs.composer-options }}
+
+      - name: Run tests
+        run: |
+          if [[ "${{ matrix.db-type }}" == 'sqlite' ]]; then
+            export DB_URL='sqlite:///:memory:'
+            export db_dsn='sqlite:///:memory:'
+          fi
+          if [[ "${{ matrix.db-type }}" == 'mysql' ]]; then
+            export DB_URL='mysql://root:root@127.0.0.1/${{ inputs.db-name }}'
+            export db_dsn='mysql://root:root@127.0.0.1:3306/${{ inputs.db-name }}?encoding=utf8mb4&timezone=UTC&cacheMetadata=true&quoteIdentifiers=true&persistent=false'
+          fi
+          if [[ "${{ matrix.db-type }}" == 'pgsql' ]]; then
+            export DB_URL='postgres://postgres:postgres@127.0.0.1/postgres'
+            export db_dsn='postgres://postgres:postgres@127.0.0.1:5432/postgres?encoding=utf8&timezone=UTC&cacheMetadata=true&quoteIdentifiers=true&persistent=false'
+          fi
+          if [[ "${{ inputs.with-redis }}" == 'true' ]]; then
+            export REDIS_HOST='127.0.0.1'
+            export REDIS_PORT='6379'
+          fi
+          if [[ "${{ matrix.php-version }}" == '${{ inputs.coverage-php }}' && "${{ matrix.db-type }}" == '${{ inputs.coverage-db }}' && "${{ matrix.dependencies }}" == 'highest' ]]; then
+            export CODECOVERAGE=1
+            ${{ inputs.test-cmd }} --coverage-clover=coverage.xml
+          else
+            ${{ inputs.test-cmd }}
+          fi
+
+      - name: Code Coverage Report
+        if: ${{ success() && inputs.with-coverage && matrix.php-version == inputs.coverage-php && matrix.db-type == inputs.coverage-db && matrix.dependencies == 'highest' }}
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  lowest:
+    name: Testsuite (lowest dependencies)
+    if: inputs.with-lowest
+    runs-on: ${{ fromJSON(inputs.os)[0] }}
+
+    services:
+      mysql:
+        image: mysql:8.4
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: ${{ inputs.db-name }}
+        options: --health-cmd="mysqladmin ping -h localhost" --health-interval=10s --health-timeout=5s --health-retries=5
+      postgres:
+        image: postgres:15
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: --health-cmd="pg_isready -U postgres" --health-interval=10s --health-timeout=5s --health-retries=5
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup MySQL database
+        if: ${{ fromJSON(inputs.db-types)[0] == 'mysql' }}
+        run: |
+          sudo service mysql start || true
+          mysql -h 127.0.0.1 -u root -proot -e "CREATE DATABASE IF NOT EXISTS \`${{ inputs.db-name }}\`;"
+
+      - name: Start redis
+        if: inputs.with-redis
+        run: docker run -d --name redis -p 6379:6379 redis:7
+
+      - name: Start meilisearch
+        if: inputs.with-meilisearch
+        run: docker run -d --name meilisearch -p 7700:7700 getmeili/meilisearch:latest
+
+      - name: Start typesense
+        if: inputs.with-typesense
+        run: |
+          docker run -d --name typesense -p 8108:8108 \
+            -e TYPESENSE_API_KEY=xyz -e TYPESENSE_DATA_DIR=/data \
+            typesense/typesense:30.1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ fromJSON(inputs.php-versions)[0] }}
+          extensions: mbstring, intl, pdo_${{ fromJSON(inputs.db-types)[0] }}${{ inputs.with-redis && ', redis' || '' }}${{ inputs.extensions-extra != '' && ', ' || '' }}${{ inputs.extensions-extra }}
+          ini-values: zend.assertions=1
+          coverage: none
+
+      - name: Composer install (lowest)
+        uses: ramsey/composer-install@v3
+        with:
+          dependency-versions: lowest
+          composer-options: ${{ inputs.composer-options }}
+
+      - name: Run tests (lowest)
+        run: |
+          if [[ '${{ fromJSON(inputs.db-types)[0] }}' == 'sqlite' ]]; then
+            export DB_URL='sqlite:///:memory:'
+            export db_dsn='sqlite:///:memory:'
+          fi
+          if [[ '${{ fromJSON(inputs.db-types)[0] }}' == 'mysql' ]]; then
+            export DB_URL='mysql://root:root@127.0.0.1/${{ inputs.db-name }}'
+            export db_dsn='mysql://root:root@127.0.0.1:3306/${{ inputs.db-name }}?encoding=utf8mb4&timezone=UTC&cacheMetadata=true&quoteIdentifiers=true&persistent=false'
+          fi
+          if [[ '${{ fromJSON(inputs.db-types)[0] }}' == 'pgsql' ]]; then
+            export DB_URL='postgres://postgres:postgres@127.0.0.1/postgres'
+            export db_dsn='postgres://postgres:postgres@127.0.0.1:5432/postgres?encoding=utf8&timezone=UTC&cacheMetadata=true&quoteIdentifiers=true&persistent=false'
+          fi
+          if [[ "${{ inputs.with-redis }}" == 'true' ]]; then
+            export REDIS_HOST='127.0.0.1'
+            export REDIS_PORT='6379'
+          fi
+          ${{ inputs.test-cmd }}

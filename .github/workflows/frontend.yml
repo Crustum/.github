@@ -1,0 +1,52 @@
+name: Frontend tests
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: 'Node.js version'
+        required: false
+        default: '20'
+        type: string
+      working-directory:
+        description: 'Directory with package.json'
+        required: false
+        default: 'tests/frontend'
+        type: string
+      run-build:
+        description: 'Run npm run build after tests'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: npm
+          cache-dependency-path: ${{ inputs.working-directory }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ${{ inputs.working-directory }}
+        run: npm ci
+
+      - name: Run tests
+        working-directory: ${{ inputs.working-directory }}
+        run: npm test -- --run
+
+      - name: Build
+        if: inputs.run-build
+        working-directory: ${{ inputs.working-directory }}
+        run: npm run build

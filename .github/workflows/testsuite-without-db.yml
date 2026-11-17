@@ -1,0 +1,126 @@
+name: Testsuite without DB
+
+on:
+  workflow_call:
+    inputs:
+      php-versions:
+        description: 'JSON array of PHP versions'
+        required: false
+        default: '["8.2", "8.3", "8.4", "8.5"]'
+        type: string
+      dependencies:
+        description: 'JSON array of dependency versions for the main matrix'
+        required: false
+        default: '["highest"]'
+        type: string
+      with-lowest:
+        description: 'Add one prefer-lowest leg (first PHP + first OS)'
+        required: false
+        default: true
+        type: boolean
+      os:
+        description: 'JSON array of runners'
+        required: false
+        default: '["ubuntu-24.04"]'
+        type: string
+      extensions:
+        description: 'PHP extensions for tests'
+        required: false
+        default: 'mbstring, intl'
+        type: string
+      test-cmd:
+        description: 'Test command (phpunit, pest or composer test), without coverage flags'
+        required: false
+        default: 'vendor/bin/phpunit --configuration=phpunit.xml.dist'
+        type: string
+      coverage-php:
+        description: 'PHP version of the coverage leg'
+        required: false
+        default: '8.2'
+        type: string
+      with-coverage:
+        description: 'Upload coverage to codecov'
+        required: false
+        default: true
+        type: boolean
+      composer-options:
+        description: 'Extra composer options for unstable PHP'
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  testsuite:
+    runs-on: ${{ matrix.os }}
+    continue-on-error: ${{ matrix.unstable }}
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ${{ fromJSON(inputs.php-versions) }}
+        dependencies: ${{ fromJSON(inputs.dependencies) }}
+        os: ${{ fromJSON(inputs.os) }}
+        unstable: [false]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: ${{ inputs.extensions }}
+          ini-values: zend.assertions=1
+          coverage: pcov
+
+      - name: Composer install
+        uses: ramsey/composer-install@v3
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
+          composer-options: ${{ inputs.composer-options }}
+
+      - name: Run tests
+        run: |
+          if [[ "${{ matrix.php-version }}" == '${{ inputs.coverage-php }}' && "${{ matrix.dependencies }}" == 'highest' ]]; then
+            export CODECOVERAGE=1
+            ${{ inputs.test-cmd }} --coverage-clover=coverage.xml
+          else
+            ${{ inputs.test-cmd }}
+          fi
+
+      - name: Code Coverage Report
+        if: ${{ success() && inputs.with-coverage && matrix.php-version == inputs.coverage-php && matrix.dependencies == 'highest' }}
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  lowest:
+    name: Testsuite (lowest dependencies)
+    if: inputs.with-lowest
+    runs-on: ${{ fromJSON(inputs.os)[0] }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ fromJSON(inputs.php-versions)[0] }}
+          extensions: ${{ inputs.extensions }}
+          ini-values: zend.assertions=1
+          coverage: none
+
+      - name: Composer install (lowest)
+        uses: ramsey/composer-install@v3
+        with:
+          dependency-versions: lowest
+          composer-options: ${{ inputs.composer-options }}
+
+      - name: Run tests (lowest)
+        run: ${{ inputs.test-cmd }}

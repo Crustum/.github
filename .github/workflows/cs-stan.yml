@@ -1,0 +1,56 @@
+name: Coding Standard & Static Analysis
+
+on:
+  workflow_call:
+    inputs:
+      php:
+        description: 'PHP version for quality checks'
+        required: false
+        default: '8.4'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  cs-stan:
+    name: Coding Standard & Static Analysis
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.php }}
+          extensions: mbstring, intl, json, dom
+          coverage: none
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Composer install
+        uses: ramsey/composer-install@v3
+
+      - name: Run phpcs
+        if: always()
+        run: composer cs-check
+
+      - name: Run rector (dry-run)
+        if: always()
+        run: composer rector-check
+
+      - name: Run phpstan
+        if: always()
+        run: composer stan
+
+      - name: Run structarmed
+        if: always()
+        run: |
+          if composer run -l 2>/dev/null | grep -q structarmed; then
+            composer structarmed
+          else
+            echo "No structarmed script, skipping."
+          fi
