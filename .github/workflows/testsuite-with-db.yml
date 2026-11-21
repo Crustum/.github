@@ -119,20 +119,24 @@ jobs:
 
       - name: Setup MySQL database
         if: matrix.db-type == 'mysql'
+        shell: bash
         run: |
           sudo service mysql start || true
           mysql -h 127.0.0.1 -u root -proot -e "CREATE DATABASE IF NOT EXISTS \`${{ inputs.db-name }}\`;"
 
       - name: Start redis
         if: inputs.with-redis
+        shell: bash
         run: docker run -d --name redis -p 6379:6379 redis:7
 
       - name: Start meilisearch
         if: inputs.with-meilisearch
+        shell: bash
         run: docker run -d --name meilisearch -p 7700:7700 getmeili/meilisearch:latest
 
       - name: Start typesense
         if: inputs.with-typesense
+        shell: bash
         run: |
           docker run -d --name typesense -p 8108:8108 \
             -e TYPESENSE_API_KEY=xyz -e TYPESENSE_DATA_DIR=/data \
@@ -153,6 +157,7 @@ jobs:
           composer-options: ${{ inputs.composer-options }}
 
       - name: Run tests
+        shell: bash
         run: |
           if [[ "${{ matrix.db-type }}" == 'sqlite' ]]; then
             export DB_URL='sqlite:///:memory:'
@@ -212,20 +217,24 @@ jobs:
 
       - name: Setup MySQL database
         if: ${{ fromJSON(inputs.db-types)[0] == 'mysql' }}
+        shell: bash
         run: |
           sudo service mysql start || true
           mysql -h 127.0.0.1 -u root -proot -e "CREATE DATABASE IF NOT EXISTS \`${{ inputs.db-name }}\`;"
 
       - name: Start redis
         if: inputs.with-redis
+        shell: bash
         run: docker run -d --name redis -p 6379:6379 redis:7
 
       - name: Start meilisearch
         if: inputs.with-meilisearch
+        shell: bash
         run: docker run -d --name meilisearch -p 7700:7700 getmeili/meilisearch:latest
 
       - name: Start typesense
         if: inputs.with-typesense
+        shell: bash
         run: |
           docker run -d --name typesense -p 8108:8108 \
             -e TYPESENSE_API_KEY=xyz -e TYPESENSE_DATA_DIR=/data \
@@ -246,6 +255,7 @@ jobs:
           composer-options: ${{ inputs.composer-options }}
 
       - name: Run tests (lowest)
+        shell: bash
         run: |
           if [[ '${{ fromJSON(inputs.db-types)[0] }}' == 'sqlite' ]]; then
             export DB_URL='sqlite:///:memory:'

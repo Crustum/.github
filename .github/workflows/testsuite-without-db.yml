@@ -84,6 +84,7 @@ jobs:
           composer-options: ${{ inputs.composer-options }}
 
       - name: Run tests
+        shell: bash
         run: |
           if [[ "${{ matrix.php-version }}" == '${{ inputs.coverage-php }}' && "${{ matrix.dependencies }}" == 'highest' ]]; then
             export CODECOVERAGE=1
@@ -123,4 +124,5 @@ jobs:
           composer-options: ${{ inputs.composer-options }}
 
       - name: Run tests (lowest)
+        shell: bash
         run: ${{ inputs.test-cmd }}
